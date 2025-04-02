@@ -1,9 +1,15 @@
 
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import { Button } from './ui/button';
+import { Toggle } from './ui/toggle';
 
-const Navbar = () => {
+interface NavbarProps {
+  theme: "light" | "dark";
+  toggleTheme: () => void;
+}
+
+const Navbar = ({ theme, toggleTheme }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -29,7 +35,9 @@ const Navbar = () => {
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-background/95 backdrop-blur-sm shadow-sm' : 'bg-transparent'
+        scrolled 
+          ? 'bg-background/95 backdrop-blur-sm shadow-sm dark:bg-background/90 dark:backdrop-blur-md dark:border-b dark:border-border/50' 
+          : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,10 +48,35 @@ const Navbar = () => {
             </a>
           </div>
           
-          <div className="md:hidden">
+          <div className="hidden md:flex items-center">
+            <Toggle 
+              className="mr-4 p-2 rounded-full hover:bg-muted"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
+            </Toggle>
+          </div>
+          
+          <div className="md:hidden flex items-center">
+            <Toggle 
+              className="mr-2 p-2 rounded-full hover:bg-muted"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
+            </Toggle>
             <button
               type="button"
-              className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none"
+              className="bg-muted/30 dark:bg-muted/20 rounded-md p-2 inline-flex items-center justify-center text-foreground hover:bg-muted focus:outline-none"
               onClick={toggleMenu}
             >
               <span className="sr-only">Open menu</span>
@@ -68,7 +101,7 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {isOpen && (
-        <div className="absolute top-full left-0 w-full bg-background shadow-lg md:hidden">
+        <div className="absolute top-full left-0 w-full bg-background/95 backdrop-blur-sm shadow-lg md:hidden dark:bg-background/90 dark:backdrop-blur-md">
           <div className="pt-2 pb-4 px-4 space-y-1">
             <a href="#home" className="block px-3 py-2 rounded-md text-base font-medium text-primary hover:bg-secondary">Home</a>
             <a href="#about" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary">About</a>
